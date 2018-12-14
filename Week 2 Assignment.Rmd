@@ -1,0 +1,44 @@
+---
+title: "Data Products Week 2 Assignment"
+author: "Gustavo T Peconick"
+date: "13/12/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      cache = TRUE,
+                      warning=FALSE,
+                      message=FALSE,
+                      error=FALSE,
+                      results = "hide")
+library(leaflet)
+```
+
+## R Markdown
+
+```{r loadData, results='asis'}
+file<-"1000-largest-us-cities-by-population-with-geographic-coordinates.csv"
+largest<-read.csv(file,sep=";")
+largest$Coordinates<-as.character(largest$Coordinates)
+splitCoord<-strsplit(largest$Coordinates,
+                     split=",")%>%as.data.frame() %>% t
+largest$Coordinates<-NULL
+largest<-cbind(largest,
+               lat=as.numeric(splitCoord[,1]),
+               lon=as.numeric(splitCoord[,2]))
+labels<-paste0("name: ",largest$City,"\nPopulation: ",largest$Population)
+```
+
+asdasd
+
+```{r render  map, results='asis'}
+
+mymap<-leaflet() %>% addTiles()
+mymap %>% addMarkers(lat = largest$lat,
+                     lng = largest$lon,
+                     popup=labels,
+                     clusterOptions = markerClusterOptions())
+
+```
+
